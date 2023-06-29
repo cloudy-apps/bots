@@ -2,9 +2,14 @@ import { ref } from "vue";
 
 export const useEnv = function () {
   const env = ref({});
-  fetch("/.env")
-    .then((x) => x.json)
-    .then((x) => (env.value = x));
+  const ready = new Promise((resolve) => {
+    fetch("/.env")
+      .then((x) => x.json())
+      .then((x) => {
+        env.value = x;
+        resolve(true);
+      });
+  });
 
-  return { env };
+  return { env, ready };
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4">
+  <div class="container mx-auto px-4" v-if="ready">
     <div class="flex mb-4">
       <input
         v-model="search"
@@ -44,12 +44,17 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, unref } from "vue";
+import { computed, ref, unref, watch } from "vue";
 import { useBots } from "./useBots";
+import { useEnv } from "./useEnv";
 
 const { bots, create, remove, fetchAll } = useBots();
+const { ready } = useEnv();
+
 const search = ref("");
 const newBot = ref("");
+
+ready().then(fetchAll);
 
 const list = computed(() => {
   const filter = unref(search);
@@ -81,6 +86,4 @@ async function removeBot(name) {
     remove(name);
   }
 }
-
-onMounted(fetchAll);
 </script>

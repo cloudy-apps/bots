@@ -9,7 +9,7 @@ export const useBots = function () {
     const headers = { "content-type": "application/json" };
     const body = JSON.stringify({ name, header });
 
-    fetch(unref(env).APP_BOT_API, {
+    fetch(unref(env).BOT_API, {
       method: "POST",
       mode: "cors",
       credentials: "include",
@@ -19,7 +19,7 @@ export const useBots = function () {
   };
 
   const remove = (name) => {
-    return fetch(new URL(name, env.APP_BOT_API + "/"), {
+    return fetch(new URL(name, unref(env).BOT_API + "/"), {
       method: "DELETE",
       mode: "cors",
       credentials: "include",
@@ -27,7 +27,7 @@ export const useBots = function () {
   };
 
   const fetchAll = () => {
-    return fetch(unref(env).APP_BOT_API, {
+    return fetch(unref(env).BOT_API, {
       mode: "cors",
       credentials: "include",
     })
