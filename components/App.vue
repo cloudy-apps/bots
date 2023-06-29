@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4" v-if="ready">
+  <div class="container mx-auto px-4 relative">
     <div class="flex mb-4">
       <input
         v-model="search"
@@ -11,7 +11,13 @@
         <span class="material-icons">refresh</span>
       </button>
     </div>
-
+    <div
+      v-if="loading"
+      class="absolute t-4 r-4 my-4 bg-gray-200 p-4 border border-gray-400 rounded-lg"
+    >
+      <span class="material-icons text-sm text-green-500 mr-2">circle</span>
+      Hold on
+    </div>
     <div class="grid justify-items-stretch gap-4 grid-cols-2 md:grid-cols-3">
       <div
         class="flex border border-gray-300 round bg-white shadow p-3 rounded-md"
@@ -44,7 +50,7 @@
 </template>
 
 <script setup>
-import { computed, ref, unref, watch } from "vue";
+import { computed, ref, unref } from "vue";
 import { useBots } from "./useBots";
 import { useEnv } from "./useEnv";
 
@@ -53,8 +59,12 @@ const { ready } = useEnv();
 
 const search = ref("");
 const newBot = ref("");
+const loading = ref(true);
 
-ready().then(fetchAll);
+ready().then(async () => {
+  await fetchAll();
+  loading.value = false;
+});
 
 const list = computed(() => {
   const filter = unref(search);
