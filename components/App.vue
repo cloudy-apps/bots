@@ -45,7 +45,7 @@
 
 <script setup>
 import { computed, onMounted, ref, unref } from "vue";
-import { s } from "./useBots";
+import { useBots } from "./useBots";
 
 const { bots, create, remove, fetchAll } = useBots();
 const search = ref("");
