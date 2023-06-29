@@ -1,3 +1,5 @@
+import { ref } from "vue";
+
 export const useEnv = function () {
   const env = ref({});
   fetch("/.env")
