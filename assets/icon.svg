@@ -1,10 +1,14 @@
 <svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" version="1.1" xml:space="preserve">
  <g>
   <title>Layer 1</title>
-  <g transform="rotate(8.13452 256 256)" stroke="null" id="svg_4">
-   <rect stroke="#000" transform="matrix(1.18582 -0.0570263 0.0570263 1.18582 -16.3884 9.60696)" rx="15" stroke-width="4" id="svg_2" height="341" width="228" y="53.26109" x="153.39411" fill="#e91e63"/>
-   <rect stroke="#000" transform="matrix(1.14339 -0.319486 0.319486 1.14339 -66.1151 61.8505)" rx="15" stroke-width="4" id="svg_1" height="341" width="228" y="56.04461" x="89.0771" fill="#3f51b5"/>
+  <g id="svg_10" stroke="null">
+   <rect transform="rotate(-94.4085 264.851 229.914) matrix(1.06469 0.100292 -0.100292 1.06469 67.202 -26.5799)" rx="15" stroke-width="4" id="svg_8" height="341" width="228" y="50.95748" x="92.50067" fill="#e91e63" stroke="#000"/>
+   <rect transform="rotate(-82.5758 224.724 272.606) matrix(1.06031 -0.139157 0.139157 1.06031 9.88946 22.6632)" rx="15" stroke-width="4" id="svg_9" height="341" width="228" y="87.37599" x="54.77102" fill="#3f51b5" stroke="#000"/>
   </g>
+  <line fill="none" stroke="#ffffff" stroke-width="12" x1="58" y1="231.5" x2="210.08221" y2="231.5" id="svg_5"/>
+  <line fill="none" stroke="#ffffff" stroke-width="12" x1="58" y1="269.5" x2="210.08221" y2="269.5" id="svg_7"/>
+  <line fill="none" stroke-width="12" x1="229.38811" y1="269.5" x2="277.47033" y2="269.5" id="svg_11" stroke="#ffffff"/>
+  <line fill="none" stroke-width="12" x1="229.38811" y1="233.44449" x2="335.47033" y2="233.44449" id="svg_4" stroke="#ffffff"/>
  </g>
 
 </svg>

@@ -1,120 +1,111 @@
 <template>
-  <div class="flex flex-col h-screen w-screen justify-center app px-4">
-    <div
-      @click="setFlip(!flip)"
-      class="cards relative w-full max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden text-center"
-    >
-      <div
-        :class="[
-          'text-gray-900 font-bold card absolute z-1 inset-0 justify-center items-center flex text-center transition-all',
-          flip ? 'flip' : '',
-        ]"
-      >
-        <span>{{ flashcards[currentCard].front }}</span>
-      </div>
-      <div
-        :class="[
-          'text-gray-900 font-bold card absolute z-2 inset-0 justify-center items-center flex text-center transition-all',
-          flip ? '' : 'flip',
-        ]"
-      >
-        <span>{{ flashcards[currentCard].back }}</span>
-      </div>
+  <div class="container mx-auto px-4">
+    <div class="flex mb-4">
+      <input
+        v-model="search"
+        type="text"
+        placeholder="Filter..."
+        class="px-3 py-2 border rounded w-full flex-grow"
+      />
+      <button class="p-2 bg-gray-300 rounded-sm leading-4" @click="fetchAll()">
+        <span class="material-icons">refresh</span>
+      </button>
     </div>
 
-    <div class="text-center mt-4">
-      <button
-        class="bg-white border border-gray-400 shadow rounded-full w-10 h-10 p-2 mr-4"
-        @click="resetList()"
+    <div class="grid justify-items-stretch gap-4 grid-cols-2 md:grid-cols-3">
+      <div
+        class="flex border border-gray-300 round bg-white shadow p-3 rounded-md h-30"
+        v-for="bot in list"
+        :key="bot.name"
       >
-        <span class="material-icons">shuffle</span>
-      </button>
-      <button
-        class="bg-white border border-gray-400 shadow rounded-full w-10 h-10 p-2 mr-4"
-        @click="prevCard()"
+        <h2 class="text-md font-bold">{{ bot.name }}</h2>
+      </div>
+
+      <div
+        class="flex border border-gray-300 round bg-white shadow p-3 rounded-md h-30"
       >
-        <span class="material-icons">undo</span>
-      </button>
-      <button
-        class="bg-white border border-gray-400 shadow rounded-full w-10 h-10 p-2"
-        @click="nextCard()"
-      >
-        <span class="material-icons">redo</span>
-      </button>
+        <label>
+          <span class="block uppercase text-xs font-medium text-gray-700">
+            Name:
+          </span>
+          <input
+            type="text"
+            v-model="newBot"
+            class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm"
+            @keypress.enter.prevent="addBot()"
+          />
+        </label>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onBeforeUnmount, onMounted, ref, unref } from "vue";
-import { getRandomPairs } from "./dutch-words";
+import { computed, onMounted, ref, unref } from "vue";
 
-const useState = (value) => {
-  const r = ref(value);
-  const s = (v) => (r.value = v);
-  return [r, s];
+const useEnv = function () {
+  const env = ref({});
+  fetch("/.env")
+    .then((x) => x.json)
+    .then((x) => (env.value = x));
+
+  return { env };
 };
 
-const [flashcards, setFlashCards] = useState(getRandomPairs());
-const [currentCard, setCurrentCard] = useState(0);
-const [flip, setFlip] = useState(false);
+const useBots = function () {
+  const env = useEnv();
+  const bots = ref([]);
 
-const resetList = () => {
-  setFlip(false);
-  setFlashCards(getRandomPairs());
+  const create = (name, header) => {
+    const headers = { "content-type": "application/json" };
+    const body = { name, header };
+
+    fetch(env.APP_BOT_API, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      headers,
+      body,
+    });
+  };
+
+  const fetchAll = () => {
+    fetch(env.APP_BOT_API, {
+      mode: "cors",
+      credentials: "include",
+    })
+      .then((x) => x.json())
+      .then((x) => (bots.value = x));
+  };
+
+  return { create, fetchAll, bots };
 };
 
-const nextCard = () => {
-  setFlip(false);
-  setCurrentCard((unref(currentCard) + 1) % unref(flashcards).length);
-};
+const { bots, create, fetchAll } = useBots();
+const search = ref("");
+const newBot = ref("");
 
-const prevCard = () => {
-  setFlip(false);
-  setCurrentCard(
-    (unref(currentCard) > 0 ? unref(currentCard) - 1 : unref(flashcards).length) % unref(flashcards).length
+const list = computed(() => {
+  const filter = unref(search);
+
+  if (!filter) {
+    return bots.value;
+  }
+
+  return bots.value.filter(
+    (bot) => bot.name.includes(filter) || bot.header.includes(filter)
   );
-};
-
-const handleKeyDown = (event) => {
-  if (event.key === "d" || event.key === "ArrowLeft") {
-    prevCard();
-  }
-
-  if (event.key === "f" || event.key === "ArrowRight") {
-    nextCard();
-  }
-
-  if (event.key === "s" || event.key === "ArrowDown") {
-    setFlip(!flip.value);
-  }
-};
-
-onMounted(() => {
-  window.addEventListener("keydown", handleKeyDown);
 });
 
-onBeforeUnmount(() => {
-  window.removeEventListener("keydown", handleKeyDown);
-});
+async function addBot() {
+  const name = newBot.value;
+  if (!name) return;
+
+  await create(name, name);
+  await fetchAll();
+
+  newBot.value = "";
+}
+
+onMounted(fetchAll);
 </script>
-
-<style scoped>
-.card, .cards {
-  min-height: 15rem;
-}
-
-.card {
-  font-size: 2rem;
-  opacity: 1;
-  transition: opacity 0.25s linear;
-  backface-visibility: hidden;
-}
-
-.flip {
-  opacity: 0;
-}
-.app {
-  background-color: #e91e63;
-}
-</style>
