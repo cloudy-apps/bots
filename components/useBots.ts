@@ -5,25 +5,28 @@ export const useBots = function () {
   const { env } = useEnv();
   const bots = ref([]);
 
-  const create = (name: string, header: string) => {
+  const create = async (name: string, header: string) => {
     const headers = { "content-type": "application/json" };
     const body = JSON.stringify({ name, header });
 
-    fetch(unref(env).BOT_API, {
+    await fetch(unref(env).BOT_API, {
       method: "POST",
       mode: "cors",
       credentials: "include",
       headers,
       body,
     });
+
+    await fetchAll();
   };
 
-  const remove = (name) => {
-    return fetch(new URL(name, unref(env).BOT_API + "/"), {
+  const remove = async (name) => {
+    await fetch(new URL(name, unref(env).BOT_API + "/"), {
       method: "DELETE",
       mode: "cors",
       credentials: "include",
     });
+    await fetchAll();
   };
 
   const fetchAll = () => {
