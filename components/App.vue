@@ -61,7 +61,7 @@ const search = ref("");
 const newBot = ref("");
 const loading = ref(true);
 
-ready().then(async () => {
+ready.then(async () => {
   await fetchAll();
   loading.value = false;
 });
