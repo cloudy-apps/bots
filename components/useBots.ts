@@ -1,4 +1,5 @@
 import { ref, unref } from "vue";
+import { useEnv } from "./useEnv";
 
 export const useBots = function () {
   const { env } = useEnv();
@@ -35,13 +36,4 @@ export const useBots = function () {
   };
 
   return { create, remove, fetchAll, bots };
-};
-
-export const useEnv = function () {
-  const env = ref({});
-  fetch("/.env")
-    .then((x) => x.json)
-    .then((x) => (env.value = x));
-
-  return { env };
 };
