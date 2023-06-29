@@ -14,11 +14,14 @@
 
     <div class="grid justify-items-stretch gap-4 grid-cols-2 md:grid-cols-3">
       <div
-        class="flex border border-gray-300 round bg-white shadow p-3 rounded-md h-30"
+        class="flex border border-gray-300 round bg-white shadow p-3 rounded-md"
         v-for="bot in list"
         :key="bot.name"
       >
-        <h2 class="text-md font-bold">{{ bot.name }}</h2>
+        <h2 class="text-md font-bold flex-grow">{{ bot.name }}</h2>
+        <button class="text-red-300" @click="removeBot(bot.name)">
+          <span class="material-icons">delete</span>
+        </button>
       </div>
 
       <div
@@ -42,46 +45,9 @@
 
 <script setup>
 import { computed, onMounted, ref, unref } from "vue";
+import { useBots } from "./useBots";
 
-const useEnv = function () {
-  const env = ref({});
-  fetch("/.env")
-    .then((x) => x.json)
-    .then((x) => (env.value = x));
-
-  return { env };
-};
-
-const useBots = function () {
-  const env = useEnv();
-  const bots = ref([]);
-
-  const create = (name, header) => {
-    const headers = { "content-type": "application/json" };
-    const body = { name, header };
-
-    fetch(env.APP_BOT_API, {
-      method: "POST",
-      mode: "cors",
-      credentials: "include",
-      headers,
-      body,
-    });
-  };
-
-  const fetchAll = () => {
-    fetch(env.APP_BOT_API, {
-      mode: "cors",
-      credentials: "include",
-    })
-      .then((x) => x.json())
-      .then((x) => (bots.value = x));
-  };
-
-  return { create, fetchAll, bots };
-};
-
-const { bots, create, fetchAll } = useBots();
+const { bots, create, remove, fetchAll } = useBots();
 const search = ref("");
 const newBot = ref("");
 
@@ -99,12 +65,21 @@ const list = computed(() => {
 
 async function addBot() {
   const name = newBot.value;
-  if (!name) return;
+
+  if (!name) {
+    return;
+  }
 
   await create(name, name);
   await fetchAll();
 
   newBot.value = "";
+}
+
+async function removeBot(name) {
+  if (confirm("Sure?")) {
+    remove(name);
+  }
 }
 
 onMounted(fetchAll);
