@@ -1,5 +1,12 @@
 <template>
   <div class="container mx-auto px-4 relative">
+    <div
+      v-if="loading"
+      class="absolute t-4 r-4 bg-gray-200 py-1 px-2 border border-gray-400 rounded-lg"
+    >
+      <span class="material-icons text-sm text-green-500 mr-2">circle</span>
+      Hold on
+    </div>
     <div class="flex mb-4">
       <input
         v-model="search"
@@ -10,13 +17,6 @@
       <button class="p-2 bg-gray-300 rounded-sm leading-4" @click="fetchAll()">
         <span class="material-icons">refresh</span>
       </button>
-    </div>
-    <div
-      v-if="loading"
-      class="absolute t-4 r-4 my-4 bg-gray-200 p-4 border border-gray-400 rounded-lg"
-    >
-      <span class="material-icons text-sm text-green-500 mr-2">circle</span>
-      Hold on
     </div>
     <div class="grid justify-items-stretch gap-4 grid-cols-2 md:grid-cols-3">
       <div
