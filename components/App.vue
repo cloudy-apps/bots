@@ -40,7 +40,7 @@
         </div>
       </div>
 
-      <div class="text-center" v-if="!adding">
+      <div class="text-center" v-if="!editing">
         <button
           class="py-2 px-4 bg-blue-500 text-white rounded"
           @click="showForm()"
@@ -49,7 +49,7 @@
         </button>
       </div>
       <form
-        v-if="!loading && adding"
+        v-if="!loading && editing"
         class="flex flex-col border border-gray-300 round bg-white shadow p-3 rounded-md"
         @submit.prevent="saveBot()"
       >
@@ -98,7 +98,7 @@ const search = ref("");
 const newBot = ref("");
 const newBotHeader = ref("");
 const loading = ref(true);
-const adding = ref(false);
+const editing = ref(false);
 
 ready.then(async () => {
   await fetchAll();
@@ -118,7 +118,7 @@ const list = computed(() => {
 });
 
 function showForm() {
-  adding.value = true;
+  editing.value = true;
 }
 
 async function saveBot() {
@@ -142,6 +142,7 @@ async function removeBot(name) {
 }
 
 function editBot(bot) {
+  editing.value = true;
   newBot.value = bot.name;
   newBotHeader.value = bot.header;
 }
