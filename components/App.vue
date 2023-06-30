@@ -1,9 +1,6 @@
 <template>
   <div class="container mx-auto px-4 relative">
-    <div
-      v-if="loading"
-      class="absolute t-0 r-0 bg-gray-200 py-1 px-2 border border-gray-400 rounded-lg"
-    >
+    <div v-if="loading" class="mx-auto p-2">
       <span class="material-icons text-sm text-green-500 animate-spin"
         >sync</span
       >
@@ -19,14 +16,18 @@
         <span class="material-icons">refresh</span>
       </button>
     </div>
-    <div class="grid justify-items-stretch gap-4 grid-cols-2 md:grid-cols-3">
+    <div
+      v-if="!loading"
+      class="grid justify-items-stretch gap-4 grid-cols-2 md:grid-cols-3 mb-4"
+    >
       <div
-        class="relative border border-gray-300 round bg-white shadow p-3 rounded-md"
+        class="relative border border-gray-300 round bg-white shadow p-3 rounded-md overflow-y-auto h-30"
         v-for="bot in list"
         :key="bot.name"
+        @click="editBot(bot)"
       >
         <button
-          class="absolute t-0 r-0 m-2 text-red-300"
+          class="absolute top-0 right-0 m-2 text-red-500"
           @click="removeBot(bot.name)"
         >
           <span class="material-icons">delete</span>
@@ -35,10 +36,12 @@
         <p>{{ bot.header }}</p>
       </div>
     </div>
-    <div
-      class="flex flex-col border border-gray-300 round bg-white shadow p-3 rounded-md h-30"
+
+    <form
+      class="flex flex-col border border-gray-300 round bg-white shadow p-3 rounded-md"
+      @submit.prevent="addBot()"
     >
-      <label>
+      <label class="block mb-4">
         <span class="block uppercase text-xs font-medium text-gray-700">
           Name:
         </span>
@@ -48,7 +51,7 @@
           class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm"
         />
       </label>
-      <label>
+      <label class="block mb-4">
         <span class="block uppercase text-xs font-medium text-gray-700">
           System instruction:
         </span>
@@ -59,9 +62,11 @@
         ></textarea>
       </label>
       <div class="text-right">
-        <button class="py-2 px-4 bg-blue-500 text-white rounded" @click="addBot()">Add</button>
+        <button class="py-2 px-4 bg-blue-500 text-white rounded" type="submit">
+          Add
+        </button>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -104,14 +109,19 @@ async function addBot() {
   }
 
   await create(name, header);
-  await fetchAll();
 
   newBot.value = "";
+  newBotHeader.value = "";
 }
 
 async function removeBot(name) {
   if (confirm("Sure?")) {
     remove(name);
   }
+}
+
+function editBot(bot) {
+  newBot.value = bot.name;
+  newBotHeader.value = bot.header;
 }
 </script>

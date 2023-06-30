@@ -26,6 +26,7 @@ export const useBots = function () {
       mode: "cors",
       credentials: "include",
     });
+
     await fetchAll();
   };
 
