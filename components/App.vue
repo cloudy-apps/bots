@@ -36,7 +36,7 @@
       </div>
     </div>
     <div
-      class="flex border border-gray-300 round bg-white shadow p-3 rounded-md h-30"
+      class="flex flex-col border border-gray-300 round bg-white shadow p-3 rounded-md h-30"
     >
       <label>
         <span class="block uppercase text-xs font-medium text-gray-700">
@@ -55,11 +55,11 @@
         <textarea
           type="text"
           v-model="newBotHeader"
-          class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm h-30"
+          class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm h-40"
         ></textarea>
       </label>
       <div class="text-right">
-        <button @click="addBot()"></button>
+        <button class="py-2 px-4 bg-blue-500 text-white rounded" @click="addBot()">Add</button>
       </div>
     </div>
   </div>
