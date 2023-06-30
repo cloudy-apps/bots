@@ -129,7 +129,9 @@ async function saveBot() {
     return;
   }
 
+  loading.value = true;
   await create(name, header);
+  loading.value = false;
 
   newBot.value = "";
   newBotHeader.value = "";
@@ -138,7 +140,9 @@ async function saveBot() {
 
 async function removeBot(name) {
   if (confirm("Sure?")) {
-    remove(name);
+    loading.value = true;
+    await remove(name);
+    loading.value = false;
   }
 }
 
