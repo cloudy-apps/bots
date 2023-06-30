@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, unref } from "vue";
 
 export const useEnv = function () {
   const env = ref({});
@@ -11,5 +11,7 @@ export const useEnv = function () {
       });
   });
 
-  return { env, ready };
+  const getEnv = (key: string) => String(unref(env)[key] || "");
+
+  return { getEnv, ready };
 };

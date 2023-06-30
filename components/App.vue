@@ -133,6 +133,7 @@ async function saveBot() {
 
   newBot.value = "";
   newBotHeader.value = "";
+  editing.value = false;
 }
 
 async function removeBot(name) {
