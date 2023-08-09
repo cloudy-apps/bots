@@ -37,7 +37,7 @@
           </div>
           <h2 class="text-md font-bold flex-grow">
             {{ bot.name }}
-            <span class="inline-block p-1 bg-gray-200">{{
+            <span class="inline-block p-1 ml-2 bg-gray-200">{{
               (bot.model || "").replace("gpt-", "")
             }}</span>
           </h2>
