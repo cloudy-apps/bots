@@ -35,7 +35,12 @@
               <span class="material-icons">edit</span>
             </button>
           </div>
-          <h2 class="text-md font-bold flex-grow">{{ bot.name }}</h2>
+          <h2 class="text-md font-bold flex-grow">
+            {{ bot.name }}
+            <span class="inline-block p-1 bg-gray-200">{{
+              (bot.model || "").replace("gpt-", "")
+            }}</span>
+          </h2>
           <p>{{ bot.header }}</p>
         </div>
       </div>
