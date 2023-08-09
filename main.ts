@@ -1,4 +1,10 @@
 import { createApp } from "vue";
 import App from "./components/App.vue";
+import { setEnv } from "./components/useEnv";
 
-createApp(App).mount("#app");
+fetch("/.env")
+  .then((x) => x.json())
+  .then((x) => {
+    setEnv(x);
+    createApp(App).mount("#app");
+  });

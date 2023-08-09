@@ -55,7 +55,7 @@
       >
         <label class="block mb-4">
           <span class="block uppercase text-xs font-medium text-gray-700">
-            Name:
+            Name *:
           </span>
           <input
             type="text"
@@ -65,13 +65,23 @@
         </label>
         <label class="block mb-4">
           <span class="block uppercase text-xs font-medium text-gray-700">
-            System instruction:
+            System instruction *:
           </span>
           <textarea
             type="text"
             v-model="newBotHeader"
             class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm h-40"
           ></textarea>
+        </label>
+        <label class="block mb-4">
+          <span class="block uppercase text-xs font-medium text-gray-700">
+            Model:
+          </span>
+          <input
+            type="text"
+            v-model="newBotModel"
+            class="mt-1 p-2 block w-full rounded-md border border-gray-300 shadow-sm"
+          />
         </label>
         <div class="text-right">
           <button
@@ -87,20 +97,19 @@
 </template>
 
 <script setup>
-import { computed, ref, unref } from "vue";
+import { computed, onMounted, ref, unref } from "vue";
 import { useBots } from "./useBots";
-import { useEnv } from "./useEnv";
 
 const { bots, create, remove, fetchAll } = useBots();
-const { ready } = useEnv();
 
 const search = ref("");
 const newBot = ref("");
 const newBotHeader = ref("");
+const newBotModel = ref("");
 const loading = ref(true);
 const editing = ref(false);
 
-ready.then(async () => {
+onMounted(async () => {
   await fetchAll();
   loading.value = false;
 });
@@ -124,17 +133,19 @@ function showForm() {
 async function saveBot() {
   const name = newBot.value;
   const header = newBotHeader.value;
+  const model = newBotModel.value;
 
   if (!name) {
     return;
   }
 
   loading.value = true;
-  await create(name, header);
+  await create(name, header, model);
   loading.value = false;
 
   newBot.value = "";
   newBotHeader.value = "";
+  newBotModel.value = "";
   editing.value = false;
 }
 
@@ -150,5 +161,6 @@ function editBot(bot) {
   editing.value = true;
   newBot.value = bot.name;
   newBotHeader.value = bot.header;
+  newBotModel.value = bot.model;
 }
 </script>

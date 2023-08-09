@@ -1,13 +1,12 @@
-import { ref, unref } from "vue";
-import { useEnv } from "./useEnv";
+import { ref } from "vue";
+import { getEnv } from "./useEnv";
 
 export const useBots = function () {
-  const { getEnv } = useEnv();
   const bots = ref([]);
 
-  const create = async (name: string, header: string) => {
+  const create = async (name: string, header: string, model: string = '') => {
     const headers = { "content-type": "application/json" };
-    const body = JSON.stringify({ name, header });
+    const body = JSON.stringify({ name, header, model });
 
     await fetch(getEnv("BOT_API"), {
       method: "POST",
